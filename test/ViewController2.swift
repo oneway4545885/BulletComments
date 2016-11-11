@@ -20,9 +20,8 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
     var speedWayArry:NSMutableArray!
     
     @IBOutlet weak var textField: UITextField!
-    let speedWayCount:Int = 14
+    let speedWayCount:Int = 6
     let timeInterval:Double = 0.5
-    let animateDuration:Double = 5
     var chatRef:FIRDatabaseReference?
     var chatRefHandle:FIRDatabaseHandle?
     var userName:String?
@@ -33,7 +32,7 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
         super.viewDidLoad()
         
         
-        screenHeight = UIScreen.main.bounds.size.height - 32
+        screenHeight = UIScreen.main.bounds.size.height - 100
         screenWidth = UIScreen.main.bounds.size.width
         count = 0
         
@@ -132,27 +131,7 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
         textField.resignFirstResponder()
         textField.text = ""
     }
-
-    
-//    func updateTime(){
-//        
-//        
-//        if  teatArry.count > 0 {
-//            let uuid = UUID().uuidString
-//           // let str = teatArry[count] as? String
-//            self.randomLabel(text:uuid,font: 14)
-//           // count = count + 1
-//          //  teatArry.removeObject(at: 0)
-//            
-//        }else{
-//            
-//            gTimer.invalidate()
-//            
-//        }
-//    }
-    
-    
-    
+  
 // MARK: Auto width label
     func getLabWidth(labelStr:String,font:UIFont,height:CGFloat) -> CGFloat {
         
@@ -182,7 +161,7 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
             label.numberOfLines = 1
             label.sizeToFit()
             self.view .addSubview(label)
-            let animate = Double(arc4random()%10+3)
+            let animate = self.speedRateAuto(labelWidth: label.bounds.size.width)
             self.animation(label: label ,speedWay:index ,animate: animate)
         }else{
             
@@ -214,7 +193,7 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
         
         
         
-        UIView.animate(withDuration: animate, delay:0, options: ([.curveLinear]), animations: {() -> Void in
+        UIView.animate(withDuration: animate, delay:Double(speedWay), options: ([.curveLinear]), animations: {() -> Void in
             
                 label.center = CGPoint(x:0 - label.bounds.size.width / 2,y:label.center.y)
                 
@@ -226,7 +205,15 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
                 self.speedWayArry.add(speedWay)
                 self.setDataArry(text:"")
             })
+    }
+// MARK: Speed rate
+    func speedRateAuto(labelWidth:CGFloat)->Double{
+        
+        let speedRate = Double(1.0/70.0)
+        
+       return  Double(screenWidth+labelWidth) * speedRate
 
     }
-
+    // x = labelWidth  + 100
+    
 }
