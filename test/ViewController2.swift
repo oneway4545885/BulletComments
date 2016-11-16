@@ -18,6 +18,7 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
     var dataArry:NSMutableArray!
     var gTimer:Timer!
     var speedWayArry:NSMutableArray!
+    var timersArry:NSMutableArray!
     
     @IBOutlet weak var textField: UITextField!
     let speedWayCount:Int = 6
@@ -32,13 +33,13 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
         super.viewDidLoad()
         
         
-        screenHeight = UIScreen.main.bounds.size.height - 100
+        screenHeight = UIScreen.main.bounds.size.height - 70
         screenWidth = UIScreen.main.bounds.size.width
         count = 0
         
         dataArry = NSMutableArray()
         speedWayArry = NSMutableArray()
-        
+        timersArry = NSMutableArray()
         textField.delegate = self
         
         for i in 0..<speedWayCount{
@@ -190,22 +191,51 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
     }
 // MARK: Maquree Animation
     func animation(label:UILabel,speedWay:Int,animate:Double){
+
+        let delay = Double(arc4random()%4)
         
-        
-        
-        UIView.animate(withDuration: animate, delay:Double(speedWay), options: ([.curveLinear]), animations: {() -> Void in
-            
+        UIView.animate(withDuration: animate, delay:delay, options: ([.curveLinear]), animations: {() -> Void in
+                print(animate/2)
                 label.center = CGPoint(x:0 - label.bounds.size.width / 2,y:label.center.y)
-                
+            
+                let userInfo = Dictionary(dictionaryLiteral:("speedWay",speedWay))
+                let timer = Timer.scheduledTimer(timeInterval: animate/2, target: self,
+                                             selector: #selector(self.timerSwitch(timer:)),
+                                             userInfo:userInfo, repeats: true)
+                timer.fire()
             }, completion:
             
             { _ in
                 label.removeFromSuperview()
-                print("#\(speedWay) stop run")
-                self.speedWayArry.add(speedWay)
-                self.setDataArry(text:"")
+               
             })
     }
+// Timer
+    func timerSwitch(timer:Timer){
+        
+        let userInfo = timer.userInfo as! Dictionary<String,Int>
+        let speedWay = userInfo["speedWay"]! as Int
+        
+        if timersArry.count > 0 {
+            
+            for timerInArry in timersArry {
+                
+                if timerInArry as! Timer == timer {
+                    
+                    timersArry.remove(timerInArry)
+                    timer.invalidate()
+                    print("#\(speedWay) stop run")
+                    self.speedWayArry.add(speedWay)
+                    self.setDataArry(text:"")
+                    return
+                }
+                
+            }
+        }
+            timersArry.add(timer)
+    
+    }
+    
 // MARK: Speed rate
     func speedRateAuto(labelWidth:CGFloat)->Double{
         
