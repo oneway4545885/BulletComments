@@ -92,15 +92,15 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
                                          ,value["message"]as!String)
  
            
-            // let font = CGFloat(arc4random()%10+12)
-            //self.randomLabel(text:message as String, font:font)
+            let font = CGFloat(arc4random()%10+12)
+            self.randomLabel(text:message as String, font:font)
             self.setDataArry(text:message as String)
         })
     }
     
     func setDataArry(text:String){
         
-        if text.characters.count > 0 {
+        if text.count > 0 {
             
             dataArry .add(text)
             
@@ -120,7 +120,7 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
         
         
         
-        if (textField.text?.characters.count)!>0 {
+        if (textField.text?.count)!>0 {
                 let itemRef = chatRef?.childByAutoId()
                 let messageItem:NSDictionary = [
                     "name": userName!,
@@ -138,8 +138,8 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
         
         let statusLabelText: NSString = labelStr as NSString
         let size = CGSize(width: 900, height: height)
-        let dic = NSDictionary(object: font, forKey: NSFontAttributeName as NSCopying)
-        let strSize = statusLabelText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dic as? [String : AnyObject], context: nil).size
+        let dic = NSDictionary(object: font, forKey: NSAttributedString.Key.font as NSCopying)
+        let strSize = statusLabelText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dic as? [ NSAttributedString.Key : AnyObject], context: nil).size
         
         return strSize.width
     }
@@ -156,7 +156,7 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
             let label = UILabel(frame:CGRect(x:screenWidth,y:Y,width:width,height:font))
         
             label.text = text as String
-            let color = UIColor.init(colorLiteralRed:arc4RandomColor(), green:arc4RandomColor(), blue: arc4RandomColor(), alpha:1)
+            let color = UIColor.init(_colorLiteralRed:arc4RandomColor(), green:arc4RandomColor(), blue: arc4RandomColor(), alpha:1)
             label.textColor = color
             label.font = UIFont.systemFont(ofSize: font)
             label.numberOfLines = 1
@@ -181,8 +181,8 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
             let arryCount = UInt32(speedWayArry.count)
             let index = Int(arc4random()%arryCount)
             let speedWay = speedWayArry.object(at:index) as? Int
-                print(speedWayArry)
-                print("#\(speedWay) start running")
+//                print(speedWayArry)
+//                print("#\(speedWay) start running")
                 speedWayArry.removeObject(at: index)
                 return speedWay!
         }else{
@@ -211,7 +211,7 @@ class ViewController2: UIViewController ,UITextFieldDelegate{
             })
     }
 // Timer
-    func timerSwitch(timer:Timer){
+    @objc func timerSwitch(timer:Timer){
         
         let userInfo = timer.userInfo as! Dictionary<String,Int>
         let speedWay = userInfo["speedWay"]! as Int
